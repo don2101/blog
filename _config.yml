@@ -21,7 +21,7 @@ title_separator          : "Major is Astronomy/Astrophysics"
 name                     : "Yeom Hee don"
 description              : "An amazing website."
 url                      : "https://don2101.github.io"
-baseurl                  : "https://github.com/don2101/blog/public"
+baseurl                  : "/public"
 repository               : # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 # breadcrumbs            : false # true, false (default)
