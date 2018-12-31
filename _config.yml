@@ -16,8 +16,8 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 
 # Site Settings
 locale                   : "en-US"
-title                    : "SSAFYens"
-title_separator          : "Major is Astronomy/Astrophysics"
+title                    : "The Boxer's blog"
+title_separator          : ""
 name                     : "Yeom Hee don"
 description              : "An amazing website."
 url                      : "https://don2101.github.io"
