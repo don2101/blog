@@ -483,7 +483,146 @@ public Object pop() {
 
 
 
+## Item 8. finalizer와 cleaner 사용을 피하라
+
+- Java의 두 가지 객체 소멸자
 
 
 
+### finalizer
+
+- 예측할 수 없고 상황에 따라 위험할 수 있어 불필요하다.
+- 오동작, 낮은 성능, 이식성 문제의 원인이 되기도 한다.
+- **기본적으로 쓰지 말것!**
+- 동작중 발생한 예외는 무시되며 처리할 작업이 남았더라도 그 순간 종료된다.
+  - 훼손된 객체를 예측할 수 없다.
+
+
+
+### cleaner
+
+- finalizer보다 덜 위험하지만, 예측할 수 없고, 느리고, 불필요하다.
+
+
+
+- 둘 다 C++의 destructor와 다른 개념이다.
+- 가비지 컬렉터의 알고리즘에 따라 수행 속도가 결정되므로 유저 환경에서 제대로 동작하지 않을 수 있다.
+
+
+
+#### 단점
+
+- 즉시 수행된다는 보장이 없다.
+  - 파일 닫기를 finalizer나 cleaner에게 맡기면 중대한 오류가 발생할 수 있다.
+- 수행 여부 또한 보장하지 않는다.
+  - 상태를 영구적으로 수정하는 작업에서는 절대 finalizer와 cleaner를 사용하면 안된다.
+- 성능도 안좋다.
+
+
+
+
+
+- 그렇다고 System.gc나 System.runFinalization에 현혹되지 말자
+
+
+
+#### finalizer 공격
+
+- 생성자나 직렬화 과정에서 예외가 발생하면, 이 생성중인 객체에서 악의적인 하위 클래스의 finalizer가 수행될 수 있게 된다.
+- final이 아닌 클래스를 finalizer 공격으로부터 방어하려면 아무일도 하지 않는 finalize 메서드를 final로 선언하자.
+
+
+
+### 대안책?
+
+- AutoCloseable을 구현하고, 클라이언트에서 객체를 모두 사용하면 close 메서드를 호출한다.
+- 예외가 발생해도 종료되도록 try-with-resources를 사용해야 한다.
+
+
+
+### 그럼에도 쓰임새?
+
+- 소유자가 close를 호출하지 않는 것에 대비한 안전망 역할
+- 네이티브 피어와 연결된 객체
+  - 네이티브 피어 : 일반 자바 객체가 네이티브 메서드를 통해 기능을 위임한 네이티브 객체
+  - 네이티브 객체는 자바 객체가 아니브로 가비지 컬렉터가 회수하지 못한다. 이를 cleaner와 finalizer가 해줄 수 있다.
+
+
+
+
+
+## Item 9. try-finally 보다 try-with-resources를 사용하라
+
+- 자바 라이브러리에는 close메서드를 호출해 직접 닫아줘야 하는 자원이 많다.
+- 전통적으로 자원이 제대로 닫힘을 보장하는 수단으로 try-finally가 많이 쓰였다.
+- 하지만 자원이 2개 이상일 경우 너무 지저분하다.
+- 또한, 예외는 try, finally블록 모두에서 발생할 수는데, 그렇게 되면 스택 추적 내역에 첫번째 예외정보는 남지 않아 디버깅이 어렵다.
+
+```java
+static void copy(String src, String dst) throws IOException {
+    InpuStream in = new FileInputStream(src);
+    try {
+        OutputStream out = new FileOutputStream(dst);
+        
+        try {
+            //복사
+        } finally {
+            out.close();
+        }
+    } finally {
+        in.close();
+    }
+} 
+```
+
+
+
+### try-with-resources
+
+- 구조를 사용하려면 해당 자원이 AutoCloseable 인터페이스를 구현해야 한다.
+  - AutoCloseable 인터페이스 : void를 반환하는 close 메서드만 정의한 인터페이스
+
+```java
+static String Line(String path) throrws IOException {
+    try(BufferedReader br = new BufferedReader(new fileReader(path))) {
+        return br.readLine();
+    }
+}
+```
+
+- readLine과 close 양쪽에서 예외가 발생하면 close 예외는 숨겨지고 readLine 예외만 기록된다.
+  - close 예외도 지워지는게 아니고 ''숨겨졌다(suppressed)'는 꼬리표를 달고 출력된다.
+  - Throwable.getSuppressed()로 가져올 수 있다.
+
+
+
+#### 복수 자원 처리 예시
+
+```java
+static void copy(String src, String dst) throws IOException {
+    
+    try(InpuStream in = new FileInputStream(src);
+       OutputStream out = new FileOutputStream(dst)) {
+        //복사
+    }
+} 
+```
+
+- 훨씬 간단하며 보기 좋다.
+
+
+
+#### catch 절
+
+- catch 절을 사용하여 try 문을 더 중첩하지 않고도 다수의 예외를 처리할 수 있다.
+
+```java
+static String Line(String path, String defaultValue) {
+    try(BufferedReader br = new BufferedReader(new fileReader(path))) {
+        return br.readLine();
+    } catch(IOException e) {
+        return defaultValue;
+    }
+}
+```
 
