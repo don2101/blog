@@ -119,3 +119,71 @@ public boolean equals(Object object) {
 - 열거 타입 또한 완벽한 toString을 제공하니 재정의 하지 않아도 된다.
 - google의 AutoValue는 toString까지 생성해준다.
 
+
+
+
+
+## Item 13. clone 재정의는 주의해서 진행하라
+
+- Cloneable을 구현하는 것만으로는 외부 객체에서 clone 메서드를 호출할 수 없다.
+- clone 메서드를 호출하면 그 객체의 필드들을 하나하나 복사한 객체를 반환한다.
+- 클래스가 가변 객체를 참조하는 순간 코드상의 문제가 발생한다.
+- clone 메서드는 사실생 생성자와 같은 효과를 낸다.
+  - 즉, clone은 복제된 객체의 불변식을 보장해야 한다.
+
+
+
+### Item 14. Comparable을 구현할지 고려하라
+
+- compateTo : 단순 동치성 비교 뿐만 아니라 순서까지 비교할 수 있으며 제네릭하다.
+- Camparable을 구현했다는 것은 그 클래스의 인스턴스들에서 자연적인 순서가 있음을 뜻한다.
+  - Comparable을 구현한 객체 들의 배열은 손쉽게 정렬할 수 있다.
+  - 순서가 명확한 값 클래스를 작성한다면 반드시 comparable 인터페이스를 구현할 것
+
+```java
+public interface Comparable<T> {
+    int compareTo(T t);
+}
+```
+
+
+
+### compareTo 규약
+
+1. 두 객체 참조의 순서를 바꿔 비교해도 예상한 결과가 나와야 한다.
+2. x < y, y < z 이면 x < z 를 만족해야 한다.
+3. 크기가 같은 객체들 끼리는 어떤 객체와 비교하더라도 항상 같아야 한다.
+
+
+
+### compareTo 메서드 작성 요령
+
+- 각 필드가 동치인지를 비교하는 게 아니라 그 순서를 비교한다.
+- Comparable을 구현하지 않은 필드나 표준이 아닌 순서로 비교해야 한다면 Comparator를 사용
+
+
+
+- compareTo 메서드에서 연산자 <, >를 사용하는 방식은 오류를 유발하니 이제는 사용하지 않도록 한다.
+- 대신 정적 메서드 compare를 사용한다.
+- 값의 차를 기준으로 크기를 비교하는 방식은 사용하면 안된다.
+  - 정수 오버플로우나 부동소수점 계산 오류가 발생할 수 있음
+  - 대신, 정적 compare 메서드나 비교자 생성 메서드를 사용하자
+
+#### 정적 compare 메서드 사용
+
+```java
+static Comarator<Object> order = new Comparator<>() {
+    public in compare(Object o1, Object o2) {
+        return Integer.compare(o1.hashCode(), o2.hashCode());
+    }
+}
+```
+
+#### 비교자 생성 메서드 활용
+
+```java
+static Comparator<Object> order = Comparator.comparingInt(o -> 0.hashCode());
+```
+
+
+
