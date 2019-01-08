@@ -84,8 +84,6 @@ public boolean equals(Object object) {
 
 
 
-
-
 - Guava : 해시 충돌이 더욱 적은 방법
 
 - 클래스가 불변이고 해시 코드 계산 비용이 크다면, 캐싱하는 방법을 고려해볼 수 있다.
@@ -130,6 +128,8 @@ public boolean equals(Object object) {
 - 클래스가 가변 객체를 참조하는 순간 코드상의 문제가 발생한다.
 - clone 메서드는 사실생 생성자와 같은 효과를 낸다.
   - 즉, clone은 복제된 객체의 불변식을 보장해야 한다.
+
+
 
 
 
