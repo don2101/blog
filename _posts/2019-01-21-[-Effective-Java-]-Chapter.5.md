@@ -115,3 +115,74 @@ Set<smtn> exalation = new HashSet<>();
 
 - 한 줄이 넘는 메서드나 생성자에 달린 @SuppressWarnings annotation을 본다면 지역 변수 선언으로 옮기자.
 
+
+
+
+
+## Item 28. 배열보다는 리스트를 사용하라
+
+### (1) 배열 vs 리스트
+
+- 배열 : 공변타입 - Sub가 Suber의 하위 타입이면 배열 Sub[]는 Super[]의 하위 타입
+- 제네릭 : 불공변 - 서로 다른 타입
+
+```java
+Object[] objectArray = new Long[1];
+objectArray[0] = "런타임 실패"
+```
+
+```java
+List<Object> oList = new ArrayList<Long>();
+oList.add("컴파일 에러")
+```
+
+- 리스트는 컴파일 시에 에러를 확인할 수 있음
+- 배열은 실체화 된다.
+  - 실체화 : 원소 타입을 컴파일 타임에만 검사하고 런타임에는 알 수가 없다.
+- 제네릭 배열 사용 불가 이유 : 안전하지 않다.
+- 제네릭 : 원소의 타입 정보가 소거되어 런타임에서는 무슨 타입인지 알 수 없다.
+  - 따라서 배열 대신 리스트를 사용
+
+
+
+
+
+## Item 29. 이왕이면 제네릭 타입으로 만들어라
+
+### (1)일반 클래스를 제네릭 클래스로 만드는 방법
+
+1. 클래스 선언에 타입 매개변수 추가
+
+```java
+//일반 클래스
+public class Stack{
+    private Object[] elements;
+    //...
+}
+
+//제네릭 클래스
+public class Stack<E> {
+    private E[] elements;
+}
+```
+
+#### 1.제네릭 클래스 생성시 오류 방지 방법
+
+1. Object를 제네릭으로 변환
+
+```java
+public Stack() {
+    elements = (E[]) new Object[size];
+}
+```
+
+2. element 필드 타입을 E[]에서 Object[]로 변환
+
+
+
+
+
+## Item 30. 이왕이면 제네릭 메서드로 만들어라
+
+- 제네릭 메서드 작성법은 제네릭 타입 작성법과 비슷
+- 재귀적 타입 한정 : 타입의 자연적 순서를 정하는 Comparable 인터페이스와 함께 쓰인다.
