@@ -186,3 +186,66 @@ public Stack() {
 
 - 제네릭 메서드 작성법은 제네릭 타입 작성법과 비슷
 - 재귀적 타입 한정 : 타입의 자연적 순서를 정하는 Comparable 인터페이스와 함께 쓰인다.
+
+
+
+
+
+## Item 31. 한정적 와일드카드를 사용해 API 유연성을 높여라
+
+- 매개변수화 타입은 불공변
+  - List\<String>과 List\<Object>는 상하위 타입 관계가 아니다
+
+에러가 발생하는, 와일드카드 타입을 사용하지 않은 메서드
+
+```java
+// 매개변수화 타입이 불공변이기 때문에 에러 발생
+
+public void pushAll(Iterable<e> src) {
+    for (E e : src)
+        push(e)
+}
+```
+
+- Iterable src의 원소 타입이 스택의 원소 타입과 다르면 오류 발생
+
+
+
+E 생산자에 매개변수에 와일드 카드 타입 적용
+
+```java
+public void pushAll(Iterable<? extends E> src) {
+    for (E e : src)
+        push(e)
+}
+```
+
+- pushAll의 입력 매개변수 타입은 'E의 iterable'이 아니라 'E의 하위 타입의 Iterable'이어야 한다.
+- 와일드카드 타입 Iterable<? extend E>가 이를 지원한다.
+
+
+
+- 유연성을 극대화하려면 원소의 생산자나 소비자용 입력 매개변수에 와일드카드 타입을 사용
+- 하지만, 타입을 정확히 지정해야 하는 상황에는 와일드카드 타입을 쓰지 말아야 한다.
+
+
+
+### 펙스(PECS)
+
+- producer-extends, consumer-super
+- 매개변수화 타입 T가 생산자라면 <? extend T>를 사용하고, 소비자라면 <? super t>를 사용
+
+
+
+- 메서드 선언에 타입 매개변수가 한 번만 나오면 와일드 카드로 대체하라.
+
+
+
+
+
+
+
+
+
+
+
