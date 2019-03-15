@@ -37,19 +37,19 @@ python 웹 프레임워크 django를 사용하여 게시판을 만들어 보겠�
 
 설치를 한 후 설정을 하고 pycharm을 실행하면 다음과 같은 화면을 볼 수 있습니다.
 
-![](./static_1/newproject.png)
+![](C:/Users/student/Desktop/django%20%EC%A0%95%EB%A6%AC/static_1/newproject.png)
 
 create를 눌러 새로운 project를 생성하는 화면으로 넘어가면
 
 
 
-![](./static_1/createproject.png)
+![](C:/Users/student/Desktop/django%20%EC%A0%95%EB%A6%AC/static_1/createproject.png)
 
 다음과 같이 여러 python 기능을 선택할 수 있는 과정이 나옵니다. 우리는 django를 사용할 것이므로 django를 선택하고 location 부분에서 프로젝트 이름을 설정해줍니다.
 
 이후 가상환경과 django가 설치가 되고 프로젝트 메인 화면을 볼 수 있습니다.
 
-![](./static_1/projectmain.png)
+![](C:/Users/student/Desktop/django%20%EC%A0%95%EB%A6%AC/static_1/projectmain.png)
 
 여기서 주목할 점은 일반적으로 python 프로젝트를 생성하던 것과는 다르게, 생성하지도 않은 여러개의 파일들이 생성되있는 것을 볼 수 있습니다.
 
@@ -61,7 +61,7 @@ create를 눌러 새로운 project를 생성하는 화면으로 넘어가면
 
 먼저 bash설정을 잡고 가겠습니다. `crtl+alt+s` 를 누르면 pycharm 설정창이 나옵니다. 이후 `Tools`의 `Terminal`에 들어가 Shell path 부분을 bash가 깔려있는 경로로 설정해줍니다. git bash가 설치되어 있지 않은 경우 https://gitforwindows.org/ 에서 받아 설치 후 적용하면 됩니다.
 
-![](./static_1/bash.png)
+![](C:/Users/student/Desktop/django%20%EC%A0%95%EB%A6%AC/static_1/bash.png)
 
 
 
@@ -73,7 +73,7 @@ python manage.py startapp board
 
 그러면 다음과 같이 board는 폴더와 내부 파일들이 생성됩니다.
 
-![](./static_1/createboard.png)
+![](C:/Users/student/Desktop/django%20%EC%A0%95%EB%A6%AC/static_1/createboard.png)
 
 django가 제공하는 기본 뼈대를 넘어 **실제 작동할 어플리케이션을 생성한다는 의미**입니다. 이 명령어는 나중에 다시 더 자세하게 설명하겠습니다.
 
@@ -190,9 +190,7 @@ django는 기본적으로 **MVT(Model - View - Template)**구조(패턴)로 작�
 
 물론 여기서 정보란 web상의 정보이므로 주로 **html문서**를 가리킵니다.
 
-웹 서비스를 제공하는 과정을 다시 보면 위에서 설명드린 Model, View, Template란 단어가 등장하는 것을 볼 수 있습니다. 
-
-그림으로 다음과 같이 표현할 수도 있습니다.
+웹 서비스를 제공하는 과정을 보며 중복되는 내용이 있다는 것이 보이시나요? **III**에서 설명드린 Model, View, Template란 단어가 등장하는 것을 볼 수 있습니다. 바로 그 Model, View, Template가 웹 서비스를 제공하는 각 과정을 담당하게 됩니다.
 
 
 
